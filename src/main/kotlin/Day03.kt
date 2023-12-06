@@ -1,4 +1,6 @@
 fun main() {
+    val debug = false
+
     fun isPartNumber(input: List<String>, currNumStart: Pair<Int, Int>, currNumEnd: Pair<Int, Int>): Boolean {
         val i1 = (currNumStart.first - 1).coerceAtLeast(0)
         val j1 = (currNumStart.second - 1).coerceAtLeast(0)
@@ -22,11 +24,22 @@ fun main() {
         val j2 = (currNumEnd.second + 1).coerceAtMost(input[currNumEnd.first].length - 1)
         val scanTo = i2 to j2
 
+        if (debug)
+            println("looking for stars from $scanFrom to $scanTo")
+
         val result = mutableListOf<Pair<Int, Int>>()
         for (i in scanFrom.first..scanTo.first)
             for (j in scanFrom.second..scanTo.second)
                 if (input[i][j] == '*')
                     result.add(i to j)
+
+        if (debug) {
+            if (result.isEmpty())
+                println("no stars around this number")
+            else
+                println("found stars at positions: $result")
+        }
+
         return result
     }
 
@@ -91,6 +104,8 @@ fun main() {
 
                     val isEndOfRow = (j == input[i].length - 1)
                     if (isEndOfRow) {
+                        if (debug)
+                            println("($i,$j) is end of row, so it's the last digit of $currNum")
                         currNumEnd = i to j
                         val stars = findStarsAroundNumber(input, currNumStart, currNumEnd)
                         stars.forEach { pos ->
@@ -101,6 +116,8 @@ fun main() {
                 } else if (input[i][j] == '.') {
                     val isDotAfterLastDigit = currNum != 0
                     if (isDotAfterLastDigit) {
+                        if (debug)
+                            println("($i,$j) is dot after last digit of $currNum")
                         currNumEnd = i to j - 1
                         val stars = findStarsAroundNumber(input, currNumStart, currNumEnd)
                         stars.forEach { pos ->
@@ -111,6 +128,8 @@ fun main() {
                 } else {
                     val isSymbolAfterLastDigit = currNum != 0
                     if (isSymbolAfterLastDigit) {
+                        if (debug)
+                            println("($i,$j) is symbol after last digit of $currNum")
                         val stars = findStarsAroundNumber(input, currNumStart, currNumEnd)
                         stars.forEach { pos ->
                             starSymbols.getOrPut(pos) { mutableListOf() }.add(currNum)
@@ -119,6 +138,13 @@ fun main() {
                     }
                 }
             }
+        }
+
+        if (debug) {
+            println("star positions")
+            starSymbols.keys.println()
+            println("gear positions")
+            starSymbols.filter { it.value.size == 2 }.keys.println()
         }
 
         val gears = starSymbols.filter { it.value.size == 2 }.values
