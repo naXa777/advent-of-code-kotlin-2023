@@ -128,6 +128,7 @@ fun main() {
                 } else {
                     val isSymbolAfterLastDigit = currNum != 0
                     if (isSymbolAfterLastDigit) {
+                        currNumEnd = i to j - 1
                         if (debug)
                             println("($i,$j) is symbol after last digit of $currNum")
                         val stars = findStarsAroundNumber(input, currNumStart, currNumEnd)
