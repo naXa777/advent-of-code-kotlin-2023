@@ -51,9 +51,9 @@ data class Game(
     }
 
     fun fewestNumberOfCubesPossible() = Round(
-        red = this.rounds.maxBy { it.red }.red,
-        green = this.rounds.maxBy { it.green }.green,
-        blue = this.rounds.maxBy { it.blue }.blue,
+        red = this.rounds.maxOf { it.red },
+        green = this.rounds.maxOf { it.green },
+        blue = this.rounds.maxOf { it.blue },
     )
 }
 
